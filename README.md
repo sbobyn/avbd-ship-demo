@@ -2,6 +2,10 @@
 
 Interactive sailing-ship experiment with GPU rope and cloth physics, FFT ocean waves, hull-contact foam and spray, changing daylight, stars, rain and lightning.
 
+[![Watch the Windward ship demo](docs/media/windward-demo.gif)](https://avbd-ship-demo.vercel.app)
+
+**[Play the live demo](https://avbd-ship-demo.vercel.app)** · WebGPU required
+
 ## Run
 
 Use Node 24+ and pnpm 10.
