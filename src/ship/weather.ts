@@ -1,3 +1,4 @@
+import { mirrorWaterProjection } from './reflection.ts';
 import { createStorm } from './storm.ts';
 import { SmoothTransition, nearestAngle, nextDayAngle } from './transition.ts';
 import { createHullContacts } from './ocean/contact.ts';
@@ -242,6 +243,19 @@ export function createWeather(renderer: THREE.WebGPURenderer, scene: THREE.Scene
   })();
   // A real scene reflection, perturbed by the FFT slope, retains the hull and sky.
   const reflection=reflector({resolutionScale:0.5,bounces:false,generateMipmaps:true});
+  // ReflectorNode copies the camera projection unchanged. Its reflected view
+  // reverses X, so an off-centre lens must reverse its horizontal shift too.
+  const mirrorCamera=camera.clone();
+  const mirrorProjection=uniform(new THREE.Matrix4());
+  const updateReflection=reflection.reflector.updateBefore.bind(reflection.reflector);
+  reflection.reflector.updateBefore=frame=>{
+    mirrorCamera.copy(camera,false);
+    mirrorWaterProjection(camera.projectionMatrix,mirrorCamera.projectionMatrix);
+    mirrorProjection.value.copy(mirrorCamera.projectionMatrix);
+    const reflectedFrame=Object.create(frame) as typeof frame;
+    reflectedFrame.camera=mirrorCamera;
+    return updateReflection(reflectedFrame);
+  };
   // Distort by the wave perturbation, not the flat plane's view-space normal.
   const viewNormal=cameraViewMatrix.mul(vec4(waterNormal.sub(vec3(0,0,1)),0)).xyz;
   // Project the change in reflected ray direction. A constant UV offset made
@@ -264,7 +278,7 @@ export function createWeather(renderer: THREE.WebGPURenderer, scene: THREE.Scene
   // the hull/splash silhouette sideways over the wave surface.
   const reflectedPoint=vec3(positionWorld.xy,float(-0.9).sub(positionWorld.z));
   const mirroredView=cameraViewMatrix.mul(vec4(reflectedPoint,1));
-  const reflectedClip=cameraProjectionMatrix.mul(vec4(mirroredView.x.negate(),mirroredView.yz,1));
+  const reflectedClip=mirrorProjection.mul(vec4(mirroredView.x.negate(),mirroredView.yz,1));
   const reflectionUV=reflectedClip.xy.div(reflectedClip.w.max(0.001)).mul(vec2(0.5,-0.5)).add(0.5);
   const reflectedUV=reflectionUV.add(reflectionOffset);
   reflection.uvNode=reflectedUV.clamp(0.002,0.998);
@@ -273,7 +287,7 @@ export function createWeather(renderer: THREE.WebGPURenderer, scene: THREE.Scene
   const reflectionConfidence=smoothstep(0.005,0.06,edge).mul(smoothstep(0.01,0.2,reflectedClip.w));
   const reflectedRay=reflect(eye.negate(),waterNormal);
   const skyBrightness=uniform(1);
-  const skyReflection=cubeTexture(cube.texture,vec3(reflectedRay.x,reflectedRay.z,reflectedRay.y.negate())).rgb.mul(skyBrightness);
+  const skyReflection=cubeTexture(cube.texture,reflectedRay).rgb.mul(skyBrightness);
   // Preserve subpixel starlight on glass; rough seas still use the filtered footprint.
   const reflectionClarity=uniform(1);
   const reflectionMip=smoothstep(0.15,2,fwidth(oceanUV).length()).mul(2.5).add(roughness.mul(4)).mul(reflectionClarity);
