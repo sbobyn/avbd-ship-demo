@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Windward · three-avbd</title></head>
+<body><canvas id="scene"></canvas><header><a href="https://github.com/sbobyn/three-avbd">three-avbd <span> / FIELD STUDIES</span></a></header>
+<aside class="conditions-panel" aria-label="Conditions and weather"><div class="panel-heading"><h2>Conditions</h2><span id="live">LOADING</span></div><div class="presets"><button data-preset="glass">Glass</button><button data-preset="calm">Calm</button><button data-preset="breeze" class="selected">Trade wind</button><button data-preset="swell">Rolling swell</button></div>
+<div class="section-label">LIGHT & WEATHER</div>
+<div class="weather-presets"><button data-weather="dawn">Dawn</button><button data-weather="day" class="selected">Day</button><button data-weather="storm">Storm</button><button data-weather="dusk">Dusk</button><button data-weather="night">Night</button></div>
+
+<details class="debug-panel"><summary>Debug</summary>
+<div class="debug-content"><label for="quality">Rendering quality</label><select id="quality"><option value="auto">Auto</option><option value="low">Low</option><option value="balanced">Balanced</option><option value="high">High</option></select><p id="quality-status"></p><label for="wake-inspection">Wake inspection <select id="wake-inspection"><option value="beauty">All layers</option><option value="surface">Water only</option><option value="foam">Foam coverage</option></select></label><button id="lightning" class="lightning-button">Trigger lightning</button>
+<label class="quality"><span>Volumetric clouds & light shafts</span><input id="cinematic" type="checkbox" checked/></label>
+<details class="pilot-panel"><summary>Helm & sails</summary>
+<p id="pilot-readout">0.0 kn · heading 0° · travelled 0 m</p>
+<label class="quality" for="follow-ship">Follow ship with camera <input id="follow-ship" type="checkbox" checked/></label>
+<p>Uncheck to watch the ship pass from a fixed viewpoint.</p>
+<label class="quality" for="landmarks">Scale marker boxes <input id="landmarks" type="checkbox"/></label>
+<label class="quality" for="marker-spacing">Marker spacing <select id="marker-spacing"><option value="25">25 m</option><option value="50">50 m</option><option value="100" selected>100 m</option><option value="200">200 m</option></select></label>
+<p>Fixed 4 m wide × 6 m tall boxes. Visual guides only; no collisions.</p>
+<label for="rudder">Rudder <output id="rudder-value">Amidships</output></label><input id="rudder" type="range" min="-1" max="1" step="0.05" value="0"/>
+<button id="center-rudder">Center rudder</button>
+<label for="sail-power">Sail power <output id="sail-power-value">100%</output></label><input id="sail-power" type="range" min="0" max="1" step="0.05" value="1"/>
+<label class="quality" for="auto-trim">Automatic yard trim <input id="auto-trim" type="checkbox" checked/></label>
+<label for="yard-trim">Yard angle <output id="yard-trim-value">Auto</output></label><input id="yard-trim" type="range" min="-45" max="45" step="1" value="0" disabled/>
+<p>A / D steer · W / S sail power · Q / E trim. Release steering keys to center. Sail power adjusts drive; it does not unfurl canvas.</p>
+</details>
+<label for="gust">Gust strength <output id="gust-value"></output></label><input id="gust" type="range" min="0" max="1" step="0.05" value="0.35"/>
+<details class="motion-panel"><summary>Hull motion</summary>
+<label for="heave">Heave <output id="heave-value"></output></label><input id="heave" type="range" min="0" max="0.7" step="0.05" value="0.15"/>
+<label for="roll">Roll <output id="roll-value"></output></label><input id="roll" type="range" min="0" max="8" step="0.5" value="2"/>
+<label for="period">Swell period <output id="period-value"></output></label><input id="period" type="range" min="3" max="12" step="0.5" value="7"/>
+</details><div class="actions"><button id="pause">Pause</button><button id="reset">Reset</button><button id="camera">Sails ↗</button></div>
+<div class="capture-actions"><button id="reveal">Record 45s reveal</button><a id="reveal-download" hidden download="windward-reveal.webm">Save reveal video</a></div><p id="reveal-status"></p>
+<div class="capture-actions"><button id="sound" aria-pressed="false">Enable sound</button></div><p id="audio-status">Sound starts when enabled.</p>
+<div class="capture-actions"><button id="cinematic-camera" aria-pressed="false">Cinematic orbit</button><button id="clean-view">Hide controls · H</button></div>
+<details><summary>About this experiment</summary><p>AVBD thin rigid patches and joints simulate all six original sail surfaces, including the bowsprit and diagonal aft furled sails. The model’s original ropes and ten rope ladders deform with jointed AVBD links; ladder rungs connect to their side ropes. Wind applies pressure and drag.</p><p>Bobbing moves the attachment points; it is not a buoyancy solver. No cloth self-collision or hull contact. Wooden spars and hardware stay rigid. Original rope geometry and textures are preserved.</p><p id="metrics"></p><button id="cadence-check">Measure idle frame cadence</button><p id="cadence-result" aria-live="polite">Briefly freezes drawing and simulation to measure browser scheduling.</p><p>Model: <a href="https://polyhaven.com/a/dutch_ship_medium" target="_blank" rel="noreferrer">Dutch Ship Medium · Poly Haven</a> (CC0). James Ray Cock, Nicolò Zubbini & Rico Cilliers.</p></details><div class="debug-status"><div><span class="dot"></span><span id="status" role="status">Loading the ship and compiling physics…</span></div><span>DRAG TO ORBIT · C CINEMATIC · H CLEAN VIEW</span></div></div></details></aside>
+<aside class="wind-panel" aria-label="Wind control"><div class="wind-heading"><span>Wind vector</span><output id="wind-readout"></output></div>
+<div class="dial-caption">CAMERA-ALIGNED</div><div id="wind-dial" tabindex="0" role="group" aria-label="Wind vector controller" aria-describedby="wind-help">
+<svg viewBox="0 0 200 200" aria-hidden="true"><defs><marker id="wind-tip" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#2a6360"/></marker></defs>
+<g id="wind-plane"><circle class="dial-ring" cx="100" cy="100" r="80"/><circle class="dial-ring inner" cx="100" cy="100" r="40"/>
+<path class="dial-axis" d="M20 100H180 M100 20V180"/><path id="dial-heading" class="dial-ship" d="M87 94H107L117 100L107 106H87Z"/>
+</g>
+<line id="wind-line" x1="100" y1="100" x2="100" y2="100" marker-end="url(#wind-tip)"/>
+<circle id="wind-handle" cx="100" cy="100" r="7"/></svg></div>
+<p id="wind-help">Drag to set wind. Camera-aligned compass · edge is 18 m/s.</p>
+</aside>
+<button id="restore-controls" hidden aria-label="Show controls">Controls · H</button><div id="error" hidden></div><script type="module" src="/src/ship/main.ts"></script></body></html>

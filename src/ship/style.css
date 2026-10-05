@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{font-family:'DM Sans',sans-serif;color:#173e43;background:#d8e7e8;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;overflow:hidden}#scene{display:block;width:100vw;height:100vh}
+a{color:inherit}header{position:absolute;top:24px;left:24px;font-size:12px;letter-spacing:.04em}
+header a{text-decoration:none;font-weight:700}header a span{font-size:10px;font-weight:400;opacity:.65;margin-left:8px}
+aside{position:absolute;right:20px;top:64px;width:276px;padding:18px;background:#f7faf5e8;border:1px solid #ffffff80;border-radius:14px;box-shadow:0 8px 40px #071c2d20;backdrop-filter:blur(18px);max-height:calc(100vh - 122px);overflow:auto;scrollbar-width:thin;scrollbar-color:#9bafaa transparent}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}h2{font-size:15px;font-weight:600;margin:0}
+#live{font-size:8px;letter-spacing:.1em;color:#6b8684}
+.presets,.weather-presets{display:flex;gap:4px}.presets{margin-bottom:16px}.weather-presets{margin:8px 0 12px}
+button{font:inherit;color:inherit;background:#ffffff30;border:1px solid #bccfc966;border-radius:7px;cursor:pointer;transition:background .15s,border-color .15s}
+button:hover{background:#dce9e4;border-color:#91b2a8}button.selected{background:#234e50;color:#fff;border-color:#234e50;box-shadow:0 2px 6px #173e4320}
+.presets button,.weather-presets button{font-size:10px;flex:1;padding:9px 2px;line-height:1.25}
+label{display:flex;justify-content:space-between;font-size:11px;margin-top:13px;gap:8px}
+output{font-variant-numeric:tabular-nums;color:#627d7c}
+input[type=range]{width:100%;height:3px;margin:11px 0 4px;accent-color:#2a6360;cursor:pointer}
+.divider{height:1px;background:#9db5ac40;margin:16px 0}.section-label{font-size:9px;letter-spacing:.09em;color:#6d8280}
+.actions{display:flex;gap:5px;margin-top:16px}.actions button{flex:1;padding:8px 0;font-size:10px}
+details{border-top:1px solid #9db5ac40;padding-top:12px;margin-top:14px;font-size:10px;line-height:1.6;color:#6a7e7a}
+summary{cursor:pointer;color:#365452;font-weight:500}details p{margin:9px 0}
+.pilot-panel{margin:0 0 15px;padding:10px 0;border-top:1px solid #9db5ac40;border-bottom:1px solid #9db5ac40}
+.pilot-panel summary,.motion-panel summary{font-size:11px}.pilot-panel button{font-size:10px;padding:5px 8px}
+.pilot-panel input:disabled{opacity:.35;cursor:default}#pilot-readout{font-variant-numeric:tabular-nums}
+.quality{align-items:center;font-size:10px}.quality input{accent-color:#2a6360}
+.wind-heading{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:500}.wind-heading output{font-size:10px;font-weight:400}
+#wind-dial{width:158px;height:auto;margin:6px auto 0;cursor:crosshair;touch-action:none;user-select:none;border-radius:50%}
+#wind-dial svg{display:block;width:100%;height:auto;overflow:visible}.dial-ring{fill:#dce9e344;stroke:#a1bab1;stroke-width:1.25}.dial-ring.inner{fill:none;stroke:#baccc4;stroke-dasharray:2 5}
+.dial-axis{stroke:#a4bdb455;stroke-width:1}.dial-ship{fill:#517d72;opacity:.35}
+#wind-dial text{font:8px 'DM Sans',sans-serif;fill:#788e86;letter-spacing:.1em}
+#wind-line{stroke:#2a6360;stroke-width:2.5;stroke-linecap:round}#wind-handle{fill:#2a6360;stroke:#f7faf5;stroke-width:2.5;filter:drop-shadow(0 2px 3px #173e4330)}
+#wind-help{font-size:9px;line-height:1.5;color:#6a7e7a;text-align:center;margin:0 0 10px}
+#marker-spacing{font:inherit;color:inherit;background:transparent;border:1px solid #9cadaa;border-radius:5px;padding:3px}#marker-spacing option{color:#173e43;background:#f7faf5}
+footer{position:absolute;bottom:20px;left:24px;right:24px;display:flex;justify-content:space-between;font-size:9px;letter-spacing:.03em;color:#dcebe8;text-shadow:0 1px 8px #071c2d}
+footer>span{font-size:8px;letter-spacing:.08em}.dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#93d4bd;margin-right:8px}
+#error{position:absolute;bottom:70px;left:24px;max-width:480px;background:#fff3e8;color:#833f26;padding:20px;font-size:13px;border-radius:8px}
+button:focus-visible,input:focus-visible,summary:focus-visible,#wind-dial:focus-visible{outline:2px solid #bc712b;outline-offset:3px}
+body[data-atmosphere] header{color:#eef2ed;text-shadow:0 2px 14px #071c2d80}
+body[data-atmosphere=night] aside,body[data-atmosphere=dusk] aside{background:#152833e8;color:#dbe7e7;border-color:#78939a55}
+body[data-atmosphere=night] summary,body[data-atmosphere=dusk] summary{color:#c9dad7}
+body[data-atmosphere=night] output,body[data-atmosphere=dusk] output,body[data-atmosphere=night] #wind-help,body[data-atmosphere=dusk] #wind-help{color:#9db5b4}
+body[data-atmosphere=night] button:hover,body[data-atmosphere=dusk] button:hover{background:#39505a}
+@media(max-width:800px){header{top:18px;left:18px}aside{right:14px;top:56px;width:244px;max-height:calc(100vh - 108px);padding:15px}footer{left:18px;right:18px;bottom:16px}footer>span{display:none}#wind-dial{width:140px;height:auto}}
+
+.dial-caption{font-size:8px;letter-spacing:.1em;color:#788e86;text-align:center;margin-top:12px}
+
+.lightning-button{width:100%;padding:7px;font-size:10px;color:#627d7c;margin-bottom:2px}
+
+.capture-actions{display:flex;gap:5px;margin-top:8px}.capture-actions button{flex:1;padding:8px 3px;font-size:10px}
+.capture-actions button[aria-pressed=true]{background:#234e50;color:#fff}
+.clean-view header,.clean-view aside,.clean-view footer{opacity:0;visibility:hidden;pointer-events:none}
+#restore-controls{position:absolute;right:20px;bottom:20px;padding:8px 12px;color:#e5eeec;background:#132b334d;border-color:#ffffff20;font-size:10px;opacity:0}
+#restore-controls:hover,#restore-controls:focus-visible{opacity:1}
+
+/* Keep the public demo controls separate from diagnostics and tuning. */
+.conditions-panel{top:20px;width:310px;padding:16px;max-height:calc(100vh - 320px)}
+.conditions-panel .panel-heading{margin-bottom:10px}
+.conditions-panel .presets{margin-bottom:14px}
+.conditions-panel .weather-presets{margin-bottom:0}
+.debug-panel{margin-top:12px;padding-top:10px}
+.debug-panel>summary{font-size:10px;letter-spacing:.03em}
+.debug-content{padding-top:10px}
+.debug-content .pilot-panel{margin-top:14px}
+.debug-status{margin-top:14px;padding-top:12px;border-top:1px solid #9db5ac40;font-size:9px;line-height:1.6}
+.debug-status>span{display:block;margin-top:8px;font-size:8px;letter-spacing:.05em}
+.wind-panel{top:auto;bottom:20px;width:220px;padding:14px;overflow:visible;max-height:none}
+.wind-panel #wind-dial{width:160px;min-height:60px;display:flex;align-items:center;margin:8px auto}
+.wind-panel .dial-caption{margin-top:8px;font-size:7px}
+.wind-panel #wind-help{font-size:8px;margin:4px 0 0;line-height:1.5}
+button:disabled{opacity:.45;cursor:default}
+@media(max-width:800px){.conditions-panel{top:56px;right:14px;width:260px;padding:14px;max-height:calc(100dvh - 320px)}.wind-panel{right:14px;bottom:14px;width:200px;padding:12px}}
+@media(max-height:600px){.conditions-panel{top:14px;max-height:calc(100dvh - 28px)}.wind-panel{left:14px;right:auto;bottom:14px;width:190px}.wind-panel #wind-dial{width:130px}}
